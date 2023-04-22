@@ -66,7 +66,7 @@ stAccountData readRecord()
 	cout << "Enter Phone: ";
 	getline( cin >> ws , record.phone );
 	cout << "Enter Account Balance: ";
-	 cin >>  record.accountBalance ;
+	cin >> record.accountBalance;
 	return record;
 }
 int readPremissions() {
@@ -147,7 +147,7 @@ stAccountData readToUpdateRecord()
 	cout << "Enter Phone: ";
 	getline( cin >> ws , record.phone );
 	cout << "Enter Account Balance: ";
-	 cin >> record.accountBalance ;
+	cin >> record.accountBalance;
 	return record;
 }
 stUsers readToUpdateUserRecord()
@@ -353,7 +353,7 @@ string convertDataToLineOfData( stAccountData& record , string seperator = " " )
 	stRescord += record.pinCode + seperator;
 	stRescord += record.name + seperator;
 	stRescord += record.phone + seperator;
-	stRescord +=  record.accountBalance ;
+	stRescord += to_string( record.accountBalance );
 
 	return stRescord;
 }
@@ -973,7 +973,7 @@ void Deposit() {
 	{
 		if ( cl.accountNumber == accountToFind )
 		{
-			cl.accountBalance =  cl.accountBalance  + depositAmount ;
+			cl.accountBalance = cl.accountBalance + depositAmount;
 			saveClientsDataToFileAfterUpdate( "clinet_Data_File.txt" , vClients );
 			break;
 		}
@@ -1004,13 +1004,13 @@ void WithDrow() {
 	{
 		if ( cl.accountNumber == accountToFind )
 		{
-			while ( depositAmount >  cl.accountBalance  )
+			while ( depositAmount > cl.accountBalance )
 			{
 				cout << "The Amount That you have entered is more than the account balance.." << endl;
 				cout << "How Much Do You Want To Withdrow? (make Sure To Enter A correct Amount..) ";
 				cin >> depositAmount;
 			}
-			cl.accountBalance =  cl.accountBalance  - depositAmount ;
+			cl.accountBalance = cl.accountBalance - depositAmount;
 			saveClientsDataToFileAfterUpdate( "clinet_Data_File.txt" , vClients );
 			break;
 		}

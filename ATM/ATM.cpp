@@ -105,7 +105,7 @@ string convertDataToLineOfData( stAccountData& record , string seperator = " " )
 	stRescord += record.pinCode + seperator;
 	stRescord += record.name + seperator;
 	stRescord += record.phone + seperator;
-	stRescord += record.accountBalance;
+	stRescord += to_string( record.accountBalance );
 
 	return stRescord;
 }
@@ -225,30 +225,17 @@ vector<stAccountData> saveClientsDataToFileAfterUpdate( string fileName , vector
 void Deposit() {
 
 	vector<stAccountData> vClients = ReadFileToVector( ClientsFile );
-	stAccountData client;
-	string accountToFind = "";
 	double depositAmount = 0;
-	cout << "Enter Account Number? ";
-	getline( cin >> ws , accountToFind );
-	while ( !findClientByAccountNumber( vClients , client , accountToFind ) )
-	{
-		cout << "No Account With Number " << accountToFind << endl;
 
-		cout << "Enter Account Number? ";
-		getline( cin >> ws , accountToFind );
-	}
-	system( "cls" );
-	drowHeader();
-	printClientData( client );
-	drowFooter();
 	cout << "How Much Do You Want To Deposit? ";
 	cin >> depositAmount;
 	for ( stAccountData& cl : vClients )
 	{
-		if ( cl.accountNumber == accountToFind )
+		if ( cl.accountNumber == UserAccount.accountNumber )
 		{
 			cl.accountBalance = cl.accountBalance + depositAmount;
 			saveClientsDataToFileAfterUpdate( ClientsFile , vClients );
+			UserAccount.accountBalance += depositAmount;
 			break;
 		}
 	}
@@ -256,26 +243,13 @@ void Deposit() {
 void normalWithDrow() {
 	vector<stAccountData> vClients = ReadFileToVector( ClientsFile );
 	stAccountData client;
-	string accountToFind = "";
 	double depositAmount = 0;
-	cout << "Enter Account Number? ";
-	getline( cin >> ws , accountToFind );
-	while ( !findClientByAccountNumber( vClients , client , accountToFind ) )
-	{
-		cout << "No Account With Number " << accountToFind << endl;
-		cout << "Enter Account Number? ";
-		getline( cin >> ws , accountToFind );
-	}
-	system( "cls" );
-	drowHeader();
-	printClientData( client );
-	drowFooter();
 	cout << "How Much Do You Want To Withdrow? (make Sure To Enter A correct Amount..) ";
 	cin >> depositAmount;
 
 	for ( stAccountData& cl : vClients )
 	{
-		if ( cl.accountNumber == accountToFind )
+		if ( cl.accountNumber == UserAccount.accountNumber )
 		{
 			while ( depositAmount > cl.accountBalance )
 			{
@@ -285,10 +259,10 @@ void normalWithDrow() {
 			}
 			cl.accountBalance = cl.accountBalance - depositAmount;
 			saveClientsDataToFileAfterUpdate( ClientsFile , vClients );
+			UserAccount.accountBalance -= depositAmount;
 			break;
 		}
 	}
-
 }
 void printBalancesData( stAccountData& client )
 {
@@ -307,121 +281,69 @@ void showBalancessData( vector<stAccountData> vClients )
 }
 
 void TotalBalance() {
-	vector<stAccountData> vClients = ReadFileToVector( ClientsFile );
-	drowBalancesScreenHeader();
-	showBalancessData( vClients );
+	cout << "\n-------------------------------------------------------\n";
+	cout << "\t\t\t MAIN MENUE\n";
+	cout << "-------------------------------------------------------\n";
+	cout << UserAccount.accountBalance;
 	drowFooter();
 }
 short withDrowOptions() {
-	system("cls");
+	system( "cls" );
 	short withDrow = 0;
-	cout << setw( 12 ) << "[1]  50 \t"<< setw( 12 ) << "[2]  1000" << endl;
-	cout << setw( 12 ) << "[3]  200\t"<< setw( 12 ) <<"[4]  2000" << endl;
-	cout << setw( 12 ) << "[5]  400\t"<< setw( 12 ) <<"[6]  3000" << endl;
-	cout << setw( 12 ) << "[7]  500\t"<< setw( 12 ) <<"[8]  5000" << endl;
+	cout << setw( 12 ) << "[1]  50 \t" << setw( 12 ) << "[5]  1000" << endl;
+	cout << setw( 12 ) << "[2]  200\t" << setw( 12 ) << "[6]  2000" << endl;
+	cout << setw( 12 ) << "[3]  400\t" << setw( 12 ) << "[7]  3000" << endl;
+	cout << setw( 12 ) << "[4]  500\t" << setw( 12 ) << "[8]  5000" << endl;
 	cout << setw( 12 ) << "[9]  Back" << endl;
 	cin >> withDrow;
 	return withDrow;
 }
-void BalanceAfterquickWithdrow( ) {
-	short withDrow = withDrowOptions();
-	vector<stAccountData> vClients = ReadFileToVector( ClientsFile );
+short withQuickDrowAmount( short withDrow ) {
 	switch ( withDrow )
 	{
 	case 1:
-		if ( UserAccount.accountBalance < 50 )
-		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
-			break;
-		}
-		else
-		{
-			UserAccount.accountBalance -= 50;
-		}
-		break;
+		return 50;
 	case 2:
-		if ( UserAccount.accountBalance < 200 )
-		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
-			break;
-		}
-		else
-		{
-			UserAccount.accountBalance -= 200;
-		}
-		break;
+		return 200;
 	case 3:
-		if ( UserAccount.accountBalance < 400 )
-		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
-			break;
-		}
-		else
-		{
-			UserAccount.accountBalance -= 400;
-		}
-		break;
+		return 400;
 	case 4:
-		if ( UserAccount.accountBalance < 500 )
-		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
-			break;;
-		}
-		else
-		{
-			UserAccount.accountBalance -= 500;
-		}
-		break;
+		return 500;
 	case 5:
-		if ( UserAccount.accountBalance < 1000 )
-		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
-			break;
-		}
-		else
-		{
-			UserAccount.accountBalance -= 1000;
-		}
-		break;
+		return 1000;
 	case 6:
-		if ( UserAccount.accountBalance < 2000 )
-		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
-			break;
-		}
-		else
-		{
-			UserAccount.accountBalance -= 2000;
-		}
-		break;
+		return 2000;
 	case 7:
-		if ( UserAccount.accountBalance < 3000 )
-		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
-			break;
-		}
-		else
-		{
-			UserAccount.accountBalance -= 3000;
-		}
-		break;
+		return 3000;
 	case 8:
-		if ( UserAccount.accountBalance < 5000 )
+		return 5000;
+	default:
+		return 0;
+	}
+}
+void BalanceAfterquickWithdrow() {
+	short withDrow = withDrowOptions();
+	short amount = withQuickDrowAmount(withDrow);
+	vector<stAccountData> vClients = ReadFileToVector( ClientsFile );
+	for ( stAccountData& cl : vClients )
+	{
+		if ( cl.accountNumber == UserAccount.accountNumber )
 		{
-			cout << "The Amount That you have entered is more than the account balance.." << endl;
+			while ( amount > cl.accountBalance )
+			{
+				cout << "The Amount That you have entered is more than the account balance.." << endl;
+				cout << "How Much Do You Want To Withdrow? (make Sure To Enter A correct Amount..) ";
+				cin >> amount;
+			}
+			cl.accountBalance = cl.accountBalance - amount;
+			saveClientsDataToFileAfterUpdate( ClientsFile , vClients );
+			UserAccount.accountBalance -= amount;
 			break;
 		}
-		else
-		{
-			UserAccount.accountBalance -= 5000;
-		}
-		break;
-
 	}
-	saveClientsDataToFileAfterUpdate( ClientsFile , vClients );
 
 }
-void quickWithdrow(  ) {
+void quickWithdrow() {
 	BalanceAfterquickWithdrow();
 	cout << "Your Total Balance Now Is : " << UserAccount.accountBalance << endl;
 }
@@ -446,27 +368,27 @@ void performTransaction( enTransactions options ) {
 	switch ( options )
 	{
 	case enTransactions::QUICKWITHDROW:
-		system( "pause" );
-		quickWithdrow(  );
+		system( "cls" );
+		quickWithdrow();
 		backToTransactionsMenue();
 		break;
 	case enTransactions::NORMALWITHDROW:
-		system( "pause" );
+		system( "cls" );
 		normalWithDrow();
 		backToTransactionsMenue();
 		break;
 	case enTransactions::DEPOSIT:
-		system( "pause" );
+		system( "cls" );
 		Deposit();
 		backToTransactionsMenue();
 		break;
 	case enTransactions::TOTALBALANCE:
-		system( "pause" );
+		system( "cls" );
 		TotalBalance();
 		backToTransactionsMenue();
 		break;
 	case enTransactions::LOGOUT:
-		system( "pause" );
+		system( "cls" );
 		login();
 		break;
 	}
